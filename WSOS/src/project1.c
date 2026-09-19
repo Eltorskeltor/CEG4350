@@ -37,18 +37,32 @@ int setcursor(int x, int y)
 // Every two addresses contain a character and a color
 char putchar(char character)
 {
-	if(character == '\n'){
-		setcursor(0, cursorRow + 1);
-		return character;
-	}
+    if(character == '\n'){
+        setcursor(0, cursorRow + 1);
 
-	int position = (cursorRow * SCREEN_WIDTH + cursorCol) * 2;
-	volatile char* videoMemory = (volatile char*)VIDEO_MEM;
-	videoMemory[position] = character;
-	videoMemory[position + 1] = TEXT_COLOR;
-	setcursor(cursorCol + 1, cursorRow);
+        if(cursorRow >= SCREEN_HEIGHT){
+            scroll(1);
+            cursorRow = SCREEN_HEIGHT - 1;
+        }
 
-	return character;
+        return character;
+    }
+
+    int position = (cursorRow * SCREEN_WIDTH + cursorCol) * 2;
+    volatile char* videoMemory = (volatile char*)VIDEO_MEM;
+
+    videoMemory[position] = character;
+    videoMemory[position + 1] = TEXT_COLOR;
+
+    setcursor(cursorCol + 1, cursorRow);
+
+    if(cursorRow >= SCREEN_HEIGHT){
+        scroll(1);
+        cursorRow = SCREEN_HEIGHT - 1;
+        setcursor(cursorCol, cursorRow);
+    }
+
+    return character;
 }
 
 // Print the character array (string) using putchar()
