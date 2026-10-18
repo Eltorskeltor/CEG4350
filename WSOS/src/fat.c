@@ -12,11 +12,11 @@ void init_fs()
 
     // Read the first copy of the FAT (Drive 0, Cluster 1, 512 bytes * 9 clusters)
     fat0 = (fat_t *) (FAT0_ADDR); // Put FAT at 0x20000
-    floppy_read(0, FAT0_SECTOR, (void *)fat0, FAT_SIZE);
+    floppy_read(0, FAT0_SECTOR, (void *)fat0, FAT_SIZE / 512);
 
     // Read the second copy of the FAT (Drive 0, Cluster 10, 512 bytes * 9 clusters)
     fat1 = (fat_t *) (FAT1_ADDR); // Put FAT at 0x21200
-    floppy_read(0, FAT1_SECTOR, (void *)fat1, FAT_SIZE);
+    floppy_read(0, FAT1_SECTOR, (void *)fat1, FAT_SIZE / 512);
 
     // Read the root directory (Drive 0, Cluster 19, 512 bytes * 14 clusters)
     currentDirectory.isOpened = 1;
@@ -28,7 +28,7 @@ void init_fs()
     currentDirectory.startingAddress = (uint8 *) (ROOT_ADDR); // Put ROOT at 0x22400
     stringcopy("ROOT    ", (char *)currentDirectory.directoryEntry->filename, 8);
 
-    floppy_read(0, ROOT_DIR_SECTOR, (void *)currentDirectory.startingAddress, ROOT_SIZE);
+    floppy_read(0, ROOT_DIR_SECTOR, (void *)currentDirectory.startingAddress, 1);
 
     // Start our file out blank
     currentFile.isOpened = 0;
