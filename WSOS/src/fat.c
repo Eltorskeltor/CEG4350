@@ -28,7 +28,7 @@ void init_fs()
     currentDirectory.startingAddress = (uint8 *) (ROOT_ADDR); // Put ROOT at 0x22400
     stringcopy("ROOT    ", (char *)currentDirectory.directoryEntry->filename, 8);
 
-    floppy_read(0, ROOT_DIR_SECTOR, (void *)currentDirectory.startingAddress, 1);
+    floppy_read(0, ROOT_DIR_SECTOR, (void *)currentDirectory.startingAddress, 512);
 
     // Start our file out blank
     currentFile.isOpened = 0;
