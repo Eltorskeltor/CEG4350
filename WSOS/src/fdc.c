@@ -335,6 +335,10 @@ void floppy_reset(int firstTime){
  */
 
 int floppy_write(int drive, uint32 lba, void* address, uint16 count){
+    if (count == 0) {
+        return -1;
+    }
+
     count--;
     initFloppyDMA((uint32) address, count);
 
@@ -394,6 +398,11 @@ int floppy_write(int drive, uint32 lba, void* address, uint16 count){
 }
 
 int floppy_read(int drive, uint32 lba, void* address, uint16 count){
+    if (count == 0) {
+        return -1;
+    }
+
+    count--;
     initFloppyDMA((uint32) address, count);
 
     drive_select(drive);
