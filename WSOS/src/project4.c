@@ -33,14 +33,14 @@ int writeFATs()
     }
 
     // Write the first FAT copy (sectors 1-11).
-    if (floppy_write(0, FAT0_SECTOR, fat0, FAT_SIZE / 512) != 0)
+    if (floppy_write(0, FAT0_SECTOR, fat0, FAT_SIZE) != 0)
     {
         print("Error: Failed to write FAT copy 0!\n");
         return 1;
     }
 
     // Write the second FAT copy (sectors 12-22).
-    if (floppy_write(0, FAT1_SECTOR, fat1, FAT_SIZE / 512) != 0)
+    if (floppy_write(0, FAT1_SECTOR, fat1, FAT_SIZE) != 0)
     {
         print("Error: Failed to write FAT copy 1!\n");
         return 1;
@@ -62,7 +62,7 @@ int writeCurrentDirectory()
     // The root directory occupies sector 23.
     if (cluster == 0)
     {
-        if (floppy_write(0, ROOT_DIR_SECTOR, currentDirectory.startingAddress, 1) != 0)
+        if (floppy_write(0, ROOT_DIR_SECTOR, currentDirectory.startingAddress, 512) != 0)
         {
             print("Error: Failed to write the root directory!\n");
             return 1;
@@ -89,7 +89,7 @@ int writeCurrentDirectory()
 
         uint32 sector = (uint32)cluster + CLUSTER_TO_SECTOR;
 
-        if (floppy_write(0, sector, currentDirectory.startingAddress + (sectorOffset * 512), 1) != 0)
+        if (floppy_write(0, sector, currentDirectory.startingAddress + (sectorOffset * 512), 512) != 0)
         {
             print("Error: Failed to write a directory cluster!\n");
             return 1;
